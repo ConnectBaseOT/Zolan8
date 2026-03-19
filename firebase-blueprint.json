@@ -1,0 +1,23 @@
+{
+  "entities": {
+    "Generation": {
+      "title": "Generation",
+      "description": "An image generation record",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "prompt": { "type": "string" },
+        "enhancedPrompt": { "type": "string" },
+        "imageData": { "type": "string", "description": "Base64 encoded image data" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "prompt", "enhancedPrompt", "createdAt"]
+    }
+  },
+  "firestore": {
+    "generations/{generationId}": {
+      "schema": { "$ref": "#/entities/Generation" },
+      "description": "History of generated images by session"
+    }
+  }
+}
