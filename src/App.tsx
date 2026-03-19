@@ -3,13 +3,22 @@ import { ApiKeyModal } from './components/ApiKeyModal';
 import { ImageLab } from './components/ImageLab';
 import { Loader2 } from 'lucide-react';
 import { getSessionId } from './lib/session';
+import { auth } from './lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function App() {
   const [hasApiKey, setHasApiKey] = useState(false);
   const [checkingKey, setCheckingKey] = useState(true);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthReady(true);
+      }
+    });
+
     setSessionId(getSessionId());
     
     const checkKey = async () => {
@@ -38,6 +47,8 @@ export default function App() {
     };
 
     checkKey();
+
+    return () => unsubscribeAuth();
   }, []);
 
   const handleClearKey = () => {
@@ -45,7 +56,7 @@ export default function App() {
     setHasApiKey(false);
   };
 
-  if (checkingKey || !sessionId) {
+  if (checkingKey || !sessionId || !isAuthReady) {
     return (
       <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
