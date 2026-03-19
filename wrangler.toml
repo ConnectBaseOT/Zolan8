@@ -1,3 +1,6 @@
 name = "zolan8"
 compatibility_date = "2024-03-19"
 pages_build_output_dir = "dist"
+
+[assets]
+directory = "./dist"
